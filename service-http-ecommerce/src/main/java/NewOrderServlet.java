@@ -1,3 +1,6 @@
+import org.example.CorrelationId;
+import org.example.dispatcher.KafkaDispatcher;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,17 +14,18 @@ public class NewOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var orderDispatcher = new KafkaDispatcher<Order>();
-        var emailDispatcher = new KafkaDispatcher<String>();
-
 
         var usermail = req.getParameter("email");
         var orderId = UUID.randomUUID().toString();
         var amount = req.getParameter("amount");
         var order = new Order(orderId, new BigDecimal(amount), usermail);
-        var email = "Thank you for your order! We are processing your order!";
         try {
-            orderDispatcher.send("ECOMMERCE_NEW_ORDER", usermail, new CorrelationId(NewOrderServlet.class.getSimpleName()), order);
-            emailDispatcher.send("ECOMMERCE_SEND_MAIL", email, new CorrelationId(NewOrderServlet.class.getSimpleName()), email);
+            orderDispatcher.send(
+                    "ECOMMERCE_NEW_ORDER",
+                    usermail,
+                    new CorrelationId(NewOrderServlet.class.getSimpleName()),
+                    order
+            );
             System.out.println("New order successfully sent.");
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().println("New order successfully sent");

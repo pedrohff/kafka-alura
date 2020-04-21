@@ -1,5 +1,9 @@
+package org.example.dispatcher;
+
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.example.CorrelationId;
+import org.example.Message;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -9,7 +13,7 @@ public class KafkaDispatcher<T> {
 
     private final KafkaProducer<String, Message<T>> producer;
 
-    KafkaDispatcher() {
+    public KafkaDispatcher() {
         this.producer = new KafkaProducer<>(properties());
     }
 
@@ -28,7 +32,7 @@ public class KafkaDispatcher<T> {
     }
 
     public Future<RecordMetadata> sendAsync(String topic, String key, CorrelationId correlationId, T payload) {
-        var value = new Message<>(correlationId, payload);
+        var value = new Message<>(correlationId.continueWith("_" + topic), payload);
         var record = new ProducerRecord<>(topic, key, value);
 
         return producer.send(record, onSent());

@@ -1,21 +1,22 @@
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.example.Message;
+import org.example.consumer.ConsumerService;
+import org.example.consumer.ServiceRunner;
 
-import java.util.HashMap;
-
-public class EmailService {
+public class EmailService implements ConsumerService<String> {
     public static void main(String[] args) {
-        var emailService = new EmailService();
-
-        var service = new KafkaService(
-                EmailService.class.getSimpleName(),
-                "ECOMMERCE_SEND_MAIL",
-                emailService::parse, new HashMap<>()
-        );
-        service.run();
-
+        new ServiceRunner(EmailService::new).start(5);
     }
 
-    private void parse(ConsumerRecord<String, Message<String>> record) {
+    public String getConsumerGroup() {
+        return EmailService.class.getSimpleName();
+    }
+
+    public String getTopic() {
+        return "ECOMMERCE_SEND_MAIL";
+    }
+
+    public void parse(ConsumerRecord<String, Message<String>> record) {
         System.out.println("----------");
         System.out.println("Sending e-mail");
         System.out.println(record.key());

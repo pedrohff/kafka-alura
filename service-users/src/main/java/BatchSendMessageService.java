@@ -1,3 +1,6 @@
+import org.example.Message;
+import org.example.consumer.KafkaService;
+import org.example.dispatcher.KafkaDispatcher;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.sql.Connection;

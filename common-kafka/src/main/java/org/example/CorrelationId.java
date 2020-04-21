@@ -1,3 +1,5 @@
+package org.example;
+
 import java.util.UUID;
 
 public class CorrelationId {
@@ -10,7 +12,7 @@ public class CorrelationId {
 
     @Override
     public String toString() {
-        return "CorrelationId{" +
+        return "br.com.alura.ecommerce.CorrelationId{" +
                 "id='" + id + '\'' +
                 '}';
     }

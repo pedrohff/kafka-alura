@@ -1,3 +1,6 @@
+import org.example.CorrelationId;
+import org.example.dispatcher.KafkaDispatcher;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -5,7 +8,6 @@ import java.util.concurrent.ExecutionException;
 public class NewOrder {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         var orderDispatcher = new KafkaDispatcher<Order>();
-        var emailDispatcher = new KafkaDispatcher<String>();
 
 
         var usermail = Math.random() + "@email.com";
@@ -13,11 +15,13 @@ public class NewOrder {
             var orderId = UUID.randomUUID().toString();
             var amount = Math.random() * 5000 + 1;
             var order = new Order(orderId, new BigDecimal(amount), usermail);
-            orderDispatcher.send("ECOMMERCE_NEW_ORDER", usermail, new CorrelationId(NewOrder.class.getSimpleName()), order);
+            orderDispatcher.send(
+                    "ECOMMERCE_NEW_ORDER",
+                    usermail,
+                    new CorrelationId(NewOrder.class.getSimpleName()),
+                    order
+            );
 
-            var email = "Thank you for your order! We are processing your order!";
-//            new Email()
-            emailDispatcher.send("ECOMMERCE_SEND_MAIL", email, new CorrelationId(NewOrder.class.getSimpleName()), email);
         }
 
     }

@@ -1,6 +1,10 @@
+package org.example.dispatcher;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.kafka.common.serialization.Serializer;
+import org.example.Message;
+import org.example.MessageAdapter;
 
 public class GsonSerializer<T> implements Serializer<T> {
 

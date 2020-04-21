@@ -1,7 +1,12 @@
+package org.example.consumer;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.example.Message;
+import org.example.dispatcher.GsonSerializer;
+import org.example.dispatcher.KafkaDispatcher;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -15,12 +20,12 @@ public class KafkaService<T> {
     private final KafkaConsumer<String, Message<T>> consumer;
     private final ConsumerFunction parse;
 
-    KafkaService(String groupId, String topic, ConsumerFunction<T> parse, Map<String, String> extraProps) {
+    public KafkaService(String groupId, String topic, ConsumerFunction<T> parse, Map<String, String> extraProps) {
         this(parse, groupId, extraProps);
         consumer.subscribe(Collections.singletonList(topic));
     }
 
-    KafkaService(String groupId, Pattern pattern, ConsumerFunction<T> parse, Map<String, String> extraProps) {
+    public KafkaService(String groupId, Pattern pattern, ConsumerFunction<T> parse, Map<String, String> extraProps) {
         this(parse, groupId, extraProps);
         consumer.subscribe(pattern);
     }

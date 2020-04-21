@@ -1,3 +1,6 @@
+import org.example.Message;
+import org.example.consumer.KafkaService;
+import org.example.dispatcher.KafkaDispatcher;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.math.BigDecimal;
@@ -5,7 +8,7 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class FraudDetectionService {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         var fraudService = new FraudDetectionService();
         var service = new KafkaService(FraudDetectionService.class.getSimpleName(), "ECOMMERCE_NEW_ORDER", fraudService::parse, new HashMap<>());
         service.run();
